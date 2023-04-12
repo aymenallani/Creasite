@@ -6,15 +6,19 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Projet.usermanagement.entity.Subscription;
+import com.Projet.websitemanagement.dto.SectionDto;
 import com.Projet.websitemanagement.dto.TemplateDto;
 import com.Projet.websitemanagement.dto.WebsiteDto;
+import com.Projet.websitemanagement.entity.Section;
 import com.Projet.websitemanagement.entity.Website;
+import com.Projet.websitemanagement.mapper.SectionMapper;
 import com.Projet.websitemanagement.mapper.WebsiteMapper;
 import com.Projet.websitemanagement.repository.TemplateRepository;
 import com.Projet.websitemanagement.service.TemplateService;
@@ -30,6 +34,8 @@ public class WebsiteContoller {
 	private WebsiteService websiteService;
 	@Autowired
 	private WebsiteMapper websiteMapper;
+	@Autowired
+	private SectionMapper sectionMapper;
 	
 	@PostMapping("")
 	public ResponseEntity<?> createWebsite(@RequestBody WebsiteDto websiteDto){
@@ -49,5 +55,11 @@ public class WebsiteContoller {
         WebsiteDto dto = websiteMapper.map(website);
         return ResponseEntity.ok(website);
     }
+	
+	@PutMapping("/{websiteID}")
+	public ResponseEntity<?> addSection(@PathVariable long websiteID, @RequestBody SectionDto sectiondto){
+		Section section = sectionMapper.unMap(sectiondto);
+		return ResponseEntity.ok(websiteService.addSection(websiteID, section));
+	}                             
 
 }

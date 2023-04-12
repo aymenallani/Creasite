@@ -5,6 +5,7 @@ import java.util.List;
 import com.Projet.base.entity.BaseEntity;
 import com.Projet.usermanagement.entity.AppUser;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +23,7 @@ public class Website extends BaseEntity{
 	private String name;
 	private String url;
 	
-	@OneToMany(mappedBy = "website")
+	@OneToMany(mappedBy = "website", cascade = CascadeType.REMOVE)
 	private List<Section> sections;
 	
 	@ManyToOne()

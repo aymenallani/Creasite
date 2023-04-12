@@ -3,6 +3,7 @@ package com.Projet.usermanagement.entity;
 import java.time.LocalDate;
 
 import com.Projet.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -24,7 +25,9 @@ public class Subscription extends BaseEntity{
 	private String type;
 	private String PaymentMethod;
 	private int AmountPaid;
+	
 	@OneToOne()
+	@JsonIgnore
 	@JoinColumn(name = "user_id")
 	private AppUser user;
 	
