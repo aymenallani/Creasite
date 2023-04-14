@@ -125,5 +125,34 @@ public class WebsiteService  extends BaseService<Website, Long>{
         return websiteRepository.save(website);
        
 	}
+	
+	@Transactional
+	public Website updateName(long websiteID, String Name){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User not authenticated");
+        }
+
+        // Get the authenticated user's username and retrieve the user from the database
+        String username = authentication.getName();
+        Optional<AppUser> optionalUser = userRepository.findByUsername(username);
+        AppUser user = optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
+        
+        if (!user.getSubscription().getStatus().equals("ACTIVE")) {
+        	throw new RuntimeException("Subscription not active ");
+        }
+        
+        
+	    Website website = websiteRepository.findById(websiteID).orElseThrow(() -> new RuntimeException("Website not found"));
+
+        if (!website.getUser().getUsername().equals(username)) {
+            throw new RuntimeException("User is not authorized to add Section to this website");
+        }
+        
+        website.setName(Name);
+        return websiteRepository.save(website);
+		
+		
+	}
 
 }

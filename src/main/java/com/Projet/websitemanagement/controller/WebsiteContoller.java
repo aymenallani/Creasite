@@ -53,13 +53,18 @@ public class WebsiteContoller {
     public ResponseEntity<?> findById(@PathVariable Long id) {
         Website website = websiteService.findById(id);
         WebsiteDto dto = websiteMapper.map(website);
-        return ResponseEntity.ok(website);
+        return ResponseEntity.ok(dto);
     }
 	
 	@PutMapping("/{websiteID}")
 	public ResponseEntity<?> addSection(@PathVariable long websiteID, @RequestBody SectionDto sectiondto){
 		Section section = sectionMapper.unMap(sectiondto);
 		return ResponseEntity.ok(websiteService.addSection(websiteID, section));
-	}                             
+	}
+	
+	@PutMapping("/{websiteID}/update-name")
+	public ResponseEntity<?> updateName(@PathVariable long websiteID, @RequestBody String Name){
+	    return ResponseEntity.ok(websiteService.updateName(websiteID, Name));
+	}
 
 }

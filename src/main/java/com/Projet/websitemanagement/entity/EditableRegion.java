@@ -13,11 +13,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "editableRegions")
-public class EditableRegions extends BaseEntity{
+public class EditableRegion extends BaseEntity{
 	
 	private String name;
 	private String Type;
-	private int multiplicated;
 	private String groupe;
 	
 	@ManyToOne()

@@ -1,6 +1,7 @@
 package com.Projet.websitemanagement.entity;
 
 import com.Projet.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -18,11 +19,12 @@ public class Content extends BaseEntity{
 	private String content;
 	
 	@ManyToOne()
+	@JsonIgnore
 	@JoinColumn(name = "section_id")
 	private Section section;
 	
 	@ManyToOne()
 	@JoinColumn(name = "editableRegions_id")
-	private EditableRegions editableRegions;
+	private EditableRegion editableRegion;
 
 }
