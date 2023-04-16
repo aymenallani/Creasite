@@ -4,8 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.Projet.error.DataNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.Projet.base.service.BaseService;
@@ -41,15 +46,15 @@ public class WebsiteService  extends BaseService<Website, Long>{
 	public Website createWebsite(Website newWebsite) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("User not authenticated");
+            throw new AuthenticationCredentialsNotFoundException("User not authenticated");
         }
 
         // Get the authenticated user's username and retrieve the user from the database
         String username = authentication.getName();
         Optional<AppUser> optionalUser = userRepository.findByUsername(username);
-        AppUser user = optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
+        AppUser user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (!user.getSubscription().getStatus().equals("ACTIVE")) {
-        	throw new RuntimeException("Subscription not active ");
+        	throw new AccessDeniedException("Subscription not active ");
         }
         Website site = new Website();
         site.setUser(user);
@@ -58,7 +63,7 @@ public class WebsiteService  extends BaseService<Website, Long>{
         }
         site.setName(newWebsite.getName());  
         Optional<Template> optionalTemplate = templateRepository.findById(newWebsite.getTemplate().getId());
-        Template template = optionalTemplate.orElseThrow(() -> new RuntimeException("Template not found"));
+        Template template = optionalTemplate.orElseThrow(() -> new DataNotFoundException("Template not found"));
         site.setTemplate(template);
         
         return websiteRepository.save(site);
@@ -69,18 +74,18 @@ public class WebsiteService  extends BaseService<Website, Long>{
 	    Website website = websiteRepository.findById(websiteId).orElseThrow(() -> new RuntimeException("Website not found"));
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("User not authenticated");
+            throw new AuthenticationCredentialsNotFoundException("User not authenticated");
         }
         String username = authentication.getName();
         if (!website.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("User is not authorized to delete this website");
+            throw new AccessDeniedException("User is not authorized to delete this website");
         }
 	    websiteRepository.delete(website);
 	}
 	
 	public Website findById(Long id) {
 		Optional<Website> optionalWebsite = websiteRepository.findById(id);
-		Website website = optionalWebsite.orElseThrow(() -> new RuntimeException("Website not found"));
+		Website website = optionalWebsite.orElseThrow(() -> new DataNotFoundException("Website not found"));
 		return website;
 	}
 	
@@ -88,35 +93,35 @@ public class WebsiteService  extends BaseService<Website, Long>{
 	public Website addSection (long websiteID, Section section) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("User not authenticated");
+            throw new AuthenticationCredentialsNotFoundException("User not authenticated");
         }
 
         // Get the authenticated user's username and retrieve the user from the database
         String username = authentication.getName();
         Optional<AppUser> optionalUser = userRepository.findByUsername(username);
-        AppUser user = optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
+        AppUser user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found"));
         
         if (!user.getSubscription().getStatus().equals("ACTIVE")) {
-        	throw new RuntimeException("Subscription not active ");
+        	throw new AccessDeniedException("Subscription not active ");
         }
         
         
-	    Website website = websiteRepository.findById(websiteID).orElseThrow(() -> new RuntimeException("Website not found"));
+	    Website website = websiteRepository.findById(websiteID).orElseThrow(() -> new DataNotFoundException("Website not found"));
 
         if (!website.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("User is not authorized to add Section to this website");
+            throw new AccessDeniedException("User is not authorized to add Section to this website");
         }
         
         if (user.getSubscription().getType().equals("Gratuit") && website.getSections().size() == 5) {
-        	throw new RuntimeException("Maximum section limit reached");
+        	throw new AccessDeniedException("Maximum section limit reached");
         }
         if (user.getSubscription().getType().equals("Basique") && website.getSections().size() == 8) {
-        	throw new RuntimeException("Maximum section limit reached");
+        	throw new AccessDeniedException("Maximum section limit reached");
         }
         
         section.setWebsite(website);
         Optional<TemplateSection> optionalTemplateSection = templateSectionRepository.findById(section.getTemplatesection().getId());
-        TemplateSection templateSection = optionalTemplateSection.orElseThrow(() -> new RuntimeException("Template Section not found"));
+        TemplateSection templateSection = optionalTemplateSection.orElseThrow(() -> new DataNotFoundException("Template Section not found"));
         section.setTemplatesection(templateSection);
         sectionRepository.save(section);
         List<Section> websections = website.getSections();
@@ -130,23 +135,23 @@ public class WebsiteService  extends BaseService<Website, Long>{
 	public Website updateName(long websiteID, String Name){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("User not authenticated");
+            throw new AuthenticationCredentialsNotFoundException("User not authenticated");
         }
 
         // Get the authenticated user's username and retrieve the user from the database
         String username = authentication.getName();
         Optional<AppUser> optionalUser = userRepository.findByUsername(username);
-        AppUser user = optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
+        AppUser user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found"));
         
         if (!user.getSubscription().getStatus().equals("ACTIVE")) {
-        	throw new RuntimeException("Subscription not active ");
+        	throw new AccessDeniedException("Subscription not active ");
         }
         
         
-	    Website website = websiteRepository.findById(websiteID).orElseThrow(() -> new RuntimeException("Website not found"));
+	    Website website = websiteRepository.findById(websiteID).orElseThrow(() -> new DataNotFoundException("Website not found"));
 
         if (!website.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("User is not authorized to add Section to this website");
+            throw new AccessDeniedException("User is not authorized to add Section to this website");
         }
         
         website.setName(Name);

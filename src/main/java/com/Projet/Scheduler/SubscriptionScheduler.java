@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.Projet.usermanagement.entity.Subscription;
+import com.Projet.usermanagement.repository.SubscriptionRepository;
 import com.Projet.usermanagement.service.SubscriptionService;
 
 @Component
@@ -15,6 +16,8 @@ public class SubscriptionScheduler {
 
     @Autowired
     private SubscriptionService subscriptionService;
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
 
     @Scheduled(cron = "0 0 0 * * *") // run every day at midnight
     public void updateSubscriptionStatus() {
@@ -22,8 +25,7 @@ public class SubscriptionScheduler {
         LocalDate currentDate = LocalDate.now();
         for (Subscription subscription : subscriptions) {
             if (subscription.getEndDate().isBefore(currentDate)) {
-                subscription.setStatus("INACTIVE");
-                subscriptionService.saveSubscription(subscription);
+                subscriptionRepository.delete(subscription);
             }
         }
     }

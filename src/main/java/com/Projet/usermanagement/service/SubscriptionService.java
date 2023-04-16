@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.Projet.base.service.BaseService;
@@ -29,13 +31,13 @@ public class SubscriptionService extends BaseService<Subscription, Long>{
 	public Subscription createSubscription(Subscription newsub) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new RuntimeException("User not authenticated");
+            throw new AuthenticationCredentialsNotFoundException("User not authenticated");
         }
 
         // Get the authenticated user's username and retrieve the user from the database
         String username = authentication.getName();
         Optional<AppUser> optionalUser = userRepository.findByUsername(username);
-        AppUser user = optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
+        AppUser user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found"));
         
 		Subscription sub = new Subscription();
 		sub.setStartDate(LocalDate.now());

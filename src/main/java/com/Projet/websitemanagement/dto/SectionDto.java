@@ -14,5 +14,8 @@ public class SectionDto {
 	
 	private String name;
 	
+	private TemplateSection templatesection;
+
+	
 	private List<Content> contents;
 }                                                                 
