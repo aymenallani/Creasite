@@ -8,11 +8,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDto {
+public class RegistrationDto {
 	@NotBlank
 	@Size(max = 50)
 	private String username;
 	@Email
 	private String email;
+	@NotBlank
+	@Size(min = 6, max = 100)
+	private String password;
+	
 
 }

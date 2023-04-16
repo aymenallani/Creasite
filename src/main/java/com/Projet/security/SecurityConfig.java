@@ -20,9 +20,32 @@ public class SecurityConfig {
 	@Autowired
 	private  AppUserDetailsService myUserDetailsService;
 	
-	// nzidha ki n7eb ay we7ed yod5lelha
-    //.requestMatchers("/template/**").permitAll()
-    //.requestMatchers("/template/**").permitAll()
+	
+	
+	//@Bean
+    //SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	//	http.csrf().disable()
+    //    .authorizeRequests().requestMatchers(
+	//			 "/register**",
+	//                "/js/**",
+	//                "/css/**",
+	//                "/img/**").permitAll()
+    //        .anyRequest().authenticated()
+    //        .and()
+    //    .userDetailsService(myUserDetailsService)
+    //    .headers().frameOptions().sameOrigin()
+    //    .and()
+    //    .formLogin()
+    //        .permitAll()
+    //    .and()
+    //    .logout()
+    //        .invalidateHttpSession(true)
+    //        .clearAuthentication(true)
+    //        .logoutSuccessUrl("/login?logout")
+    //        .permitAll();
+
+    //return http.build();
+    //}
 	
 	@Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,5 +67,19 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
+	//@Bean
+    //public BCryptPasswordEncoder passwordEncoder() {
+    //   return new BCryptPasswordEncoder();
+    //}
 
 }
+
+
+
+
+
+
+
+
+
+
