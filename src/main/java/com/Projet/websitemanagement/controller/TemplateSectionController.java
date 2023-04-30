@@ -44,6 +44,14 @@ public class TemplateSectionController {
 
 		return ResponseEntity.ok(dtos);
 	}
+	
+	@GetMapping("/template/{TemplateId}")
+	public ResponseEntity<?> findByTemplateId(@PathVariable long TemplateId){
+
+		List<TemplateSection> templateSections = templateSectionService.findByTemplateId(TemplateId);
+
+		return ResponseEntity.ok(templateSections);
+	}
 
 
 }

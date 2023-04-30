@@ -12,6 +12,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.ArrayList;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.util.StringUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -29,10 +33,16 @@ import com.Projet.usermanagement.repository.UserRepository;
 import com.Projet.websitemanagement.entity.Content;
 import com.Projet.websitemanagement.entity.EditableRegion;
 import com.Projet.websitemanagement.entity.Section;
+import com.Projet.websitemanagement.entity.TemplateSection;
 import com.Projet.websitemanagement.entity.Website;
 import com.Projet.websitemanagement.repository.ContentRepository;
 import com.Projet.websitemanagement.repository.EditableRegionRepository;
 import com.Projet.websitemanagement.repository.SectionRepository;
+import com.Projet.websitemanagement.repository.TemplateSectionRepository;
+import com.Projet.websitemanagement.repository.WebsiteRepository;
+import com.Projet.websitemanagement.classMapesJSON.MySection;
+import com.Projet.websitemanagement.classMapesJSON.NewContent;
+
 
 import jakarta.transaction.Transactional;
 
@@ -47,6 +57,14 @@ public class SectionService extends BaseService<Section, Long> {
 	private EditableRegionRepository editableRegionRepository;
 	@Autowired
 	private ContentRepository contentRepository;
+	@Autowired
+	private WebsiteService websiteService;
+	@Autowired
+	private WebsiteRepository websiteRepository;
+	@Autowired
+	private TemplateSectionRepository templateSectionRepository;
+	@Autowired
+	private ManageImagesService manageImagesService;
 	
 	@Transactional
 	public void deleteSectionById(Long sectionId) {
@@ -65,7 +83,7 @@ public class SectionService extends BaseService<Section, Long> {
 	}
 	
 	@Transactional
-	public Section addContent (long sectionID, Content content, MultipartFile imageFile) throws IOException{
+	public Section addContent (long sectionID, long editableRegionID, String content){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AuthenticationCredentialsNotFoundException("User not authenticated");
@@ -87,34 +105,25 @@ public class SectionService extends BaseService<Section, Long> {
             throw new AccessDeniedException("User is not authorized to update this section");
         }
         
-	    Optional<EditableRegion> optionalEditableRegion = editableRegionRepository.findById(content.getEditableRegion().getId());
+	    Optional<EditableRegion> optionalEditableRegion = editableRegionRepository.findById(editableRegionID);
 	    EditableRegion editableRegion = optionalEditableRegion.orElseThrow(() -> new DataNotFoundException("Editable Region not found"));
 	    Content newContent = new Content();
-	    if (editableRegion.getType().equals("text")) {
-	        newContent.setContent(content.getContent());
-	    } else if (editableRegion.getType().equals("image")) {
-	        // Save the image here
-	        String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-	        String fileExtension = FilenameUtils.getExtension(fileName);
-	        String newFileName = UUID.randomUUID().toString() + "." + fileExtension;
-	        Path path = Paths.get("uploads/images/" + newFileName);
-	        Files.createDirectories(path.getParent());
-	        Files.copy(imageFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-	        String imageUrl = "/uploads/images/" + newFileName;
-	        newContent.setContent(imageUrl);
-	    } else {
-	        throw new IllegalArgumentException("Unsupported editableRegion type: " + editableRegion.getType());
-	    }
+	    newContent.setContent(content);
 	    
 	    newContent.setSection(section);
 
 	    newContent.setEditableRegion(editableRegion);
 	    contentRepository.save(newContent);
 	    List<Content> sectionContents = section.getContents();
+	    if (sectionContents == null) {
+	    	sectionContents = new ArrayList<>();
+	    }
 	    sectionContents.add(newContent);
 	    section.setContents(sectionContents);
 	    return sectionRepository.save(section);
 	}
+	
+	
 	
 	public Section findById(Long id) {
 		Optional<Section> optionalSection = sectionRepository.findById(id);

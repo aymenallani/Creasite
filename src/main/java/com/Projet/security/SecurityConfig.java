@@ -49,18 +49,28 @@ public class SecurityConfig {
 	
 	@Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-        		.csrf().disable()
-                .authorizeRequests(auth -> auth
-                 
-                        .anyRequest().authenticated()
-                        
-                )
-                .userDetailsService(myUserDetailsService)
-                .headers(headers -> headers.frameOptions().sameOrigin())
-                .httpBasic(Customizer.withDefaults())
-                
-                .build();
+		http.csrf().disable()
+	        .authorizeRequests().requestMatchers(
+					 "/register**",
+		                "/js/**",
+		                "/css/**",
+		                "/img/**").permitAll()
+	            .anyRequest().authenticated()
+	            .and()
+	        .userDetailsService(myUserDetailsService)
+	        .headers().frameOptions().sameOrigin()
+	        .and()
+	        .formLogin()
+	            .permitAll()
+	            .loginProcessingUrl("/login")
+	        .and()
+	        .logout()
+	            .invalidateHttpSession(true)
+	            .clearAuthentication(true)
+	            .logoutSuccessUrl("/login?logout")
+	            .permitAll();
+
+	    return http.build();
     }
 	
 	@Bean

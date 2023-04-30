@@ -56,7 +56,7 @@ public class WebsiteContoller {
         return ResponseEntity.ok(dto);
     }
 	
-	@PutMapping("/{websiteID}")
+	@PostMapping("/{websiteID}")
 	public ResponseEntity<?> addSection(@PathVariable long websiteID, @RequestBody SectionDto sectiondto){
 		Section section = sectionMapper.unMap(sectiondto);
 		return ResponseEntity.ok(websiteService.addSection(websiteID, section));

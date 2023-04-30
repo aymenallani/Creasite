@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.Projet.base.service.BaseService;
 import com.Projet.error.DataNotFoundException;
+import com.Projet.websitemanagement.entity.Template;
 import com.Projet.websitemanagement.entity.TemplateSection;
 import com.Projet.websitemanagement.entity.Website;
 import com.Projet.websitemanagement.repository.TemplateSectionRepository;
@@ -17,8 +18,11 @@ public class TemplateSectionService extends BaseService<TemplateSection, Long>{
 	
 	@Autowired
 	private TemplateSectionRepository templateSectionRepository;
+
 	@Autowired
 	private WebsiteService websiteService;
+	@Autowired
+	private TemplateService templateService;
 	
 	public TemplateSection findById(Long id) {
 		Optional<TemplateSection> optionalTemplateSection = templateSectionRepository.findById(id);
@@ -29,6 +33,13 @@ public class TemplateSectionService extends BaseService<TemplateSection, Long>{
 	public List<TemplateSection> findByWebsiteId(Long id) {
 		Website website = websiteService.findById(id);
 		List<TemplateSection> templateSections= templateSectionRepository.findByTemplateId(website.getTemplate().getId());
+		return templateSections;
+
+	}
+	
+	public List<TemplateSection> findByTemplateId(Long id) {
+		Template template = templateService.findById(id);
+		List<TemplateSection> templateSections= templateSectionRepository.findByTemplateId(template.getId());
 		return templateSections;
 
 	}
