@@ -29,7 +29,7 @@ public class UserController {
 	@Autowired
 	private UserMapper userMapper;
 	
-    @CrossOrigin(origins = "http://localhost:40200/")
+    @CrossOrigin(origins = "http://localhost:4200/")
 	@PostMapping("/register")
 	public ResponseEntity<AppUser> registerUser(@Valid @RequestBody RegistrationDto userDto) {
 		AppUser user = registrationMapper.unMap(userDto);
