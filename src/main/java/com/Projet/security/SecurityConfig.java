@@ -51,8 +51,8 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 	        .authorizeRequests().requestMatchers(
-	        		"/**",
-					 "/register**",
+	        
+					 "/register/**",
 		                "/js/**",
 		                "/css/**",
 		                "/img/**").permitAll()
