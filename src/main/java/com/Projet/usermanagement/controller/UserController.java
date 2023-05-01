@@ -2,6 +2,7 @@ package com.Projet.usermanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ public class UserController {
 	@Autowired
 	private UserMapper userMapper;
 	
+    @CrossOrigin(origins = "http://localhost:40200/")
 	@PostMapping("/register")
 	public ResponseEntity<AppUser> registerUser(@Valid @RequestBody RegistrationDto userDto) {
 		AppUser user = registrationMapper.unMap(userDto);
