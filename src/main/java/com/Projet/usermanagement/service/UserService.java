@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.Projet.base.service.BaseService;
@@ -34,13 +37,16 @@ public class UserService  extends BaseService<AppUser, Long>{
 	private  AppUserDetailsService myUserDetailsService;
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 
 	
 	public AuthenticationResponse Registration(RegistrationDto registrationDto) {
 		var user = AppUser.builder()
 				.username(registrationDto.getUsername())
 				.email(registrationDto.getEmail())
-				.password(registrationDto.getPassword())
+				.password(passwordEncoder.encode(registrationDto.getPassword()))
 				.roles("USER_ROLE")
 				.build();
 		try {
@@ -73,6 +79,12 @@ public class UserService  extends BaseService<AppUser, Long>{
 			        .token(jwtToken)
 			        .build();
 		  }
+	 
+	 public boolean TokenValid(String token) {
+		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		 final String username = jwtService.extractUsername(token);
+		 return (username.equals(authentication.getName())) && !jwtService.isTokenExpired(token);
+	 }
 	
 	public AppUser findById(Long id) {
 		Optional<AppUser> optionalAppUser = userRepository.findById(id);

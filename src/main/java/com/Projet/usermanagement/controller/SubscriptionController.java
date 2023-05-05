@@ -2,6 +2,7 @@ package com.Projet.usermanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,7 @@ import com.Projet.usermanagement.entity.Subscription;
 import com.Projet.usermanagement.mapper.SubscriptionMapper;
 import com.Projet.usermanagement.service.SubscriptionService;
 
-
+@CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 @RequestMapping("/subscriptions")
 public class SubscriptionController {

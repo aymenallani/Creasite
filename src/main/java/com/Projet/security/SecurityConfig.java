@@ -64,6 +64,7 @@ public class SecurityConfig {
 	        .disable()
 	        .authorizeHttpRequests()
 	        .requestMatchers(
+	        		"/ManageImages/uploads/**",
 	                "/register/**",
 	                "/authenticate/**",
 	                "/js/**",

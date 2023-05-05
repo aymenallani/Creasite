@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Projet.usermanagement.dto.AuthentificationDto;
@@ -22,6 +23,7 @@ import com.Projet.websitemanagement.entity.Template;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 public class UserController {
 	@Autowired
@@ -31,7 +33,6 @@ public class UserController {
 	@Autowired
 	private UserMapper userMapper;
 	
-    @CrossOrigin(origins = "http://localhost:4200/")
 	@PostMapping("/register")
 	public ResponseEntity<AuthenticationResponse> register(
 		      @RequestBody RegistrationDto request
@@ -39,13 +40,18 @@ public class UserController {
 		    return ResponseEntity.ok(userService.Registration(request));
 	}
     
-    @CrossOrigin(origins = "http://localhost:4200/")
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
         @RequestBody AuthentificationDto request
     ) {
       return ResponseEntity.ok(userService.authenticate(request));
     }
+    
+    @PostMapping("TokenValid")
+	public ResponseEntity<?> TokenValid(@RequestParam String token){
+
+		return ResponseEntity.ok(userService.TokenValid(token));
+	}
 	
 	@GetMapping("users/{id}")
 	public ResponseEntity<?> findById(@PathVariable long id){
