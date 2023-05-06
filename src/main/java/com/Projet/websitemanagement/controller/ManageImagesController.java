@@ -29,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.Projet.websitemanagement.service.ManageImagesService;
 import com.Projet.websitemanagement.service.SectionService;
+import com.Projet.websitemanagement.dto.AddImageResponse;
+
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -43,8 +45,11 @@ public class ManageImagesController {
 	
 	@PostMapping("")
 	public ResponseEntity<?> addContent(MultipartFile imageFile){
+        AddImageResponse response = new AddImageResponse();
+
 		 try {
-		return ResponseEntity.ok(manageImagesService.addImage(imageFile));
+		response.setImageUrl(manageImagesService.addImage(imageFile));	 
+		return ResponseEntity.ok(response);
 		 } catch (IOException e) {
 		        throw new RuntimeException("Failed to save file", e);
 		    }
