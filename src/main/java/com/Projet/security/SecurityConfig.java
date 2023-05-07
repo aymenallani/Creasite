@@ -1,10 +1,13 @@
 package com.Projet.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import static org.springframework.http.HttpMethod.GET;
 
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -73,6 +76,9 @@ public class SecurityConfig {
 	            	"/img/**"
 	        )
 	          .permitAll()
+		        .requestMatchers(GET, "/websites/**")
+		        .permitAll()
+
 
 	        .anyRequest()
 	          .authenticated()
