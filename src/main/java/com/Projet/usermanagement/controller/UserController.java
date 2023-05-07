@@ -2,6 +2,8 @@ package com.Projet.usermanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,7 @@ import com.Projet.usermanagement.mapper.UserMapper;
 import com.Projet.usermanagement.service.UserService;
 import com.Projet.websitemanagement.dto.TemplateDto;
 import com.Projet.websitemanagement.entity.Template;
-
+import com.Projet.usermanagement.dto.TokenValidDto;
 import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "http://localhost:4200/")
@@ -49,9 +51,19 @@ public class UserController {
     
     @PostMapping("TokenValid")
 	public ResponseEntity<?> TokenValid(@RequestParam String token){
+    	
+    	TokenValidDto tokenValidDto = new TokenValidDto();
+    	tokenValidDto.setValid(userService.TokenValid(token));
 
-		return ResponseEntity.ok(userService.TokenValid(token));
+		return ResponseEntity.ok(tokenValidDto);
 	}
+    
+    @PostMapping("TokenInfo")
+    public ResponseEntity<?> TokenInfo(@RequestParam String token) {
+    	UserDto userDto = new UserDto();
+    	userDto.setUsername(userService.TokenInfo(token));
+    	return ResponseEntity.ok(userDto);
+	 }
 	
 	@GetMapping("users/{id}")
 	public ResponseEntity<?> findById(@PathVariable long id){

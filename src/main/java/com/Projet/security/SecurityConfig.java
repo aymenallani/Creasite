@@ -68,6 +68,8 @@ public class SecurityConfig {
 	        .disable()
 	        .authorizeHttpRequests()
 	        .requestMatchers(
+	        		"TokenInfo/**",
+	        		"TokenValid/**",
 	        		"/ManageImages/uploads/**",
 	                "/register/**",
 	                "/authenticate/**",

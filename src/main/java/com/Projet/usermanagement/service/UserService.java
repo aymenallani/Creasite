@@ -85,6 +85,15 @@ public class UserService  extends BaseService<AppUser, Long>{
 		 final String username = jwtService.extractUsername(token);
 		 return (username.equals(authentication.getName())) && !jwtService.isTokenExpired(token);
 	 }
+	 
+	 public String TokenInfo(String token) {
+		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		 final String username = jwtService.extractUsername(token);
+		 if( (username.equals(authentication.getName())) && !jwtService.isTokenExpired(token)) {
+			 return username;
+		 }
+		 else throw new RuntimeException("invalid token");
+	 }
 	
 	public AppUser findById(Long id) {
 		Optional<AppUser> optionalAppUser = userRepository.findById(id);
