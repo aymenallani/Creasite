@@ -11,5 +11,5 @@ import com.Projet.websitemanagement.entity.Website;
 
 @Repository
 public interface WebsiteRepository extends BaseRepository <Website, Long>{
-	List<Website> findByUserId(Long id);
+	List<Website> findByUserUsername(String username);
 }

@@ -64,9 +64,9 @@ public class WebsiteContoller {
         return ResponseEntity.ok(dto);
     }
 	
-	@GetMapping("/user/{id}")
-    public ResponseEntity<?> findByUserId(@PathVariable Long id) {
-	    List<Website> Websites = websiteService.findByUserId(id);
+	@GetMapping("/user")
+    public ResponseEntity<?> findByUserId() {
+	    List<Website> Websites = websiteService.findByUsername();
 	    List<WebsiteByUserIdDto> dto = websiteByUserIdMapper.map(Websites);
         return ResponseEntity.ok(dto);
     }

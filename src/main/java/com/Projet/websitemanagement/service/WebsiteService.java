@@ -89,9 +89,9 @@ public class WebsiteService  extends BaseService<Website, Long>{
 		return website;
 	}
 	
-	public List<Website> findByUserId(Long id) {
+	public List<Website> findByUsername() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		List<Website> Websites = websiteRepository.findByUserId(id);
+		List<Website> Websites = websiteRepository.findByUserUsername(authentication.getName());
 		return Websites;
 	}
 	
