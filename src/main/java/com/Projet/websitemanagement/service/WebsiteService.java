@@ -89,6 +89,12 @@ public class WebsiteService  extends BaseService<Website, Long>{
 		return website;
 	}
 	
+	public List<Website> findByUserId(Long id) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		List<Website> Websites = websiteRepository.findByUserId(id);
+		return Websites;
+	}
+	
 	@Transactional
 	public Website addSection (long websiteID, Section section) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -1,5 +1,8 @@
 package com.Projet.websitemanagement.controller;
 
+import java.util.List;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,11 +23,12 @@ import com.Projet.websitemanagement.dto.WebsiteDto;
 import com.Projet.websitemanagement.entity.Section;
 import com.Projet.websitemanagement.entity.Website;
 import com.Projet.websitemanagement.mapper.SectionMapper;
+import com.Projet.websitemanagement.mapper.WebsiteByUserIdMapper;
 import com.Projet.websitemanagement.mapper.WebsiteMapper;
 import com.Projet.websitemanagement.repository.TemplateRepository;
 import com.Projet.websitemanagement.service.TemplateService;
 import com.Projet.websitemanagement.service.WebsiteService;
-
+import com.Projet.websitemanagement.dto.WebsiteByUserIdDto;
 @CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 @RequestMapping("/websites")
@@ -38,6 +42,8 @@ public class WebsiteContoller {
 	private WebsiteMapper websiteMapper;
 	@Autowired
 	private SectionMapper sectionMapper;
+	@Autowired
+	private WebsiteByUserIdMapper websiteByUserIdMapper;
 	
 	@PostMapping("")
 	public ResponseEntity<?> createWebsite(@RequestBody WebsiteDto websiteDto){
@@ -55,6 +61,13 @@ public class WebsiteContoller {
     public ResponseEntity<?> findById(@PathVariable Long id) {
         Website website = websiteService.findById(id);
         WebsiteDto dto = websiteMapper.map(website);
+        return ResponseEntity.ok(dto);
+    }
+	
+	@GetMapping("/user/{id}")
+    public ResponseEntity<?> findByUserId(@PathVariable Long id) {
+	    List<Website> Websites = websiteService.findByUserId(id);
+	    List<WebsiteByUserIdDto> dto = websiteByUserIdMapper.map(Websites);
         return ResponseEntity.ok(dto);
     }
 	
